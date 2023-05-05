@@ -40,10 +40,12 @@ public class OrderServiceImpl implements OrderService {
     return orderEventRepository.findByStatusAndCreatedAfter(unsentStatuses, time);
   }
 
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateStatusAsSuccess(Long orderEventId) {
     orderEventRepository.updateStatus(orderEventId, 1);
   }
 
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void updateStatusAsError(Long orderEventId) {
     orderEventRepository.updateStatus(orderEventId, 2);
   }
