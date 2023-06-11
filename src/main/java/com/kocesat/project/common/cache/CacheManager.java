@@ -1,4 +1,4 @@
-package com.kocesat.project.proxy;
+package com.kocesat.project.common.cache;
 
 import java.util.Optional;
 

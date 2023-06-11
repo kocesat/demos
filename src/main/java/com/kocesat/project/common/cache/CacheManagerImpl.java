@@ -1,5 +1,6 @@
-package com.kocesat.project.proxy;
+package com.kocesat.project.common.cache;
 
+import com.kocesat.project.common.cache.CacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

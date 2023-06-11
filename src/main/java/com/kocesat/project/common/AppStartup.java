@@ -24,25 +24,25 @@ public class AppStartup implements CommandLineRunner {
     if (scheduler.checkExists(jobKey)) {
       scheduler.deleteJob(jobKey);
     }
-
-    final JobDetail jobDetail = JobBuilder.newJob(OrderEventQueueJob.class)
-      .withIdentity(jobKey.getName(), jobKey.getGroup())
-      .withDescription("Writes orderEvent to the queue")
-      .storeDurably()
-      .build();
-
-    final TriggerKey triggerKey = TriggerKey.triggerKey("orderEventQueueJobTrigger", "outbox");
-    final CronTrigger cronTrigger = TriggerBuilder.newTrigger()
-      .forJob(jobDetail)
-      .withIdentity(triggerKey)
-      .withSchedule(
-        CronScheduleBuilder
-          .cronSchedule("0/5 * * * * ?")
-          .withMisfireHandlingInstructionFireAndProceed()
-          .inTimeZone(TimeZone.getTimeZone("Europe/Istanbul"))
-      )
-      .build();
-
-    scheduler.scheduleJob(jobDetail, cronTrigger);
+//
+//    final JobDetail jobDetail = JobBuilder.newJob(OrderEventQueueJob.class)
+//      .withIdentity(jobKey.getName(), jobKey.getGroup())
+//      .withDescription("Writes orderEvent to the queue")
+//      .storeDurably()
+//      .build();
+//
+//    final TriggerKey triggerKey = TriggerKey.triggerKey("orderEventQueueJobTrigger", "outbox");
+//    final CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+//      .forJob(jobDetail)
+//      .withIdentity(triggerKey)
+//      .withSchedule(
+//        CronScheduleBuilder
+//          .cronSchedule("0/5 * * * * ?")
+//          .withMisfireHandlingInstructionFireAndProceed()
+//          .inTimeZone(TimeZone.getTimeZone("Europe/Istanbul"))
+//      )
+//      .build();
+//
+//    scheduler.scheduleJob(jobDetail, cronTrigger);
   }
 }

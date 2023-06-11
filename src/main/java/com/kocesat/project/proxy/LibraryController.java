@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LibraryController {
   private final LibraryService libraryService;
 
-  public LibraryController(@Qualifier("libraryServiceProxy") LibraryService libraryService) {
+  public LibraryController(
+    @Qualifier("libraryServiceProxy") LibraryService libraryService
+  ) {
     this.libraryService = libraryService;
   }
 
