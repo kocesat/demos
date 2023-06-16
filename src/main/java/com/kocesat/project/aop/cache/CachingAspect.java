@@ -1,5 +1,6 @@
 package com.kocesat.project.aop.cache;
 
+import com.kocesat.project.common.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,28 +22,26 @@ public class CachingAspect {
   public Object useCache(ProceedingJoinPoint joinPoint, UseCache useCache) throws Throwable {
     log.info("Before method running...");
 
-    log.info(String.format(
-      "Cache kontrol for key: %s",
-      useCache.cacheKey()
-    ));
+    final String cacheKey = useCache.cacheKey();
+    log.info(String.format("Cache control for key: %s", cacheKey));
 
-    if (cache.containsKey(useCache.cacheKey())) {
+    if (cache.containsKey(cacheKey)) {
       log.info("Cache hit");
-      return cache.get(useCache.cacheKey());
+      return cache.get(cacheKey);
     }
 
     log.info("Cache miss");
-    long start = System.currentTimeMillis();
+    Stopwatch stopwatch = Stopwatch.startNew();
     List<String> cities = (List<String>) joinPoint.proceed();
-    long end = System.currentTimeMillis();
+    stopwatch.stop();
 
-    log.info(String.format(
-        "%s service runtime in ms: %s",
-        joinPoint.getSignature().getName(),
-        (end - start)
+    final String methodName = joinPoint.getSignature().getName();
+    log.info(String.format("%s service runtime in ms: %s",
+        methodName,
+        stopwatch.getElapsedTime()
       ));
 
-    cache.put(useCache.cacheKey(), cities);
+    cache.put(cacheKey, cities);
     return cities;
   }
 }
