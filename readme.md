@@ -3,4 +3,6 @@
   
 - Proxy desing pattern medium blog implemented under /proxy package
 
+- Aspect Oriented Programming in Spring under /aop package
+  
 - Custom Naming of Java Object Fields Using Lombok and Jackson under /lombok package
