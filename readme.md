@@ -2,3 +2,5 @@
   https://medium.com/akbank-teknoloji/transactional-outbox-örüntüsü-nasıl-uygulanır-d1adb8128f30
   
 - Proxy desing pattern medium blog implemented under /proxy package
+
+- Custom Naming of Java Object Fields Using Lombok and Jackson under /lombok package
