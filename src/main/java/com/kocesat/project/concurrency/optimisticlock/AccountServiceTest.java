@@ -17,7 +17,7 @@ public class AccountServiceTest {
     for (int i = 0; i < threads.length; i++){
       var thread = new Thread(() -> {
         try {
-          accountService.transferMoney(1L, BigDecimal.TEN);
+          accountService.withdraw(1L, BigDecimal.TEN);
         } catch (Exception e) {
           System.out.println(e.getMessage());
         }
