@@ -29,8 +29,7 @@ public class AccountService {
     final Account account = getAccountById(id);
     checkBalanceIsSufficient(account, amount);
     final LocalDateTime lastVersion = account.getUpdatedAt();
-    final int updatedCount =
-      repository.addBalanceWithOptimisticLock(id, amount.negate(), lastVersion);
+    final int updatedCount = repository.addBalanceWithOptimisticLock(id, amount.negate(), lastVersion);
     if (updatedCount == 0) {
       throw new OptimisticLockException("Account is busy now...");
     }
