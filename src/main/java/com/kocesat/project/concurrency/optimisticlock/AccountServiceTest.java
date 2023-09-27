@@ -1,5 +1,7 @@
 package com.kocesat.project.concurrency.optimisticlock;
 
+import com.kocesat.project.common.GenericRuntimeException;
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +24,13 @@ public class AccountServiceTest {
         try {
           startSignal.await();
           accountService.withdraw(1L, BigDecimal.TEN);
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
           System.out.println(e.getMessage());
-        } finally {
+          throw new GenericRuntimeException(e.getMessage());
+        } catch (OptimisticLockException e) {
+          System.out.println(e.getMessage());
+        }
+        finally {
           endSignal.countDown();
         }
       })).start();
