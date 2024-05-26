@@ -8,3 +8,5 @@
 - Custom Naming of Java Object Fields Using Lombok and Jackson under /lombok package
 
 - Bitwise Operators & Permission Systems under /bitwise package
+
+- How to Mimic Usage of Delegates In Java (as in C#) under /delegate package
