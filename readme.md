@@ -6,3 +6,5 @@
 - Aspect Oriented Programming in Spring under /aop package
   
 - Custom Naming of Java Object Fields Using Lombok and Jackson under /lombok package
+
+- Bitwise Operators & Permission Systems under /bitwise package
