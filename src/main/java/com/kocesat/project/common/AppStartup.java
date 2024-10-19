@@ -1,20 +1,25 @@
 package com.kocesat.project.common;
 
-import com.kocesat.project.outbox.job.OrderEventQueueJob;
+import com.kocesat.project.taskqueue.Task;
+import com.kocesat.project.taskqueue.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.TimeZone;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ForkJoinPool;
 
 @Component
 @Slf4j
 public class AppStartup implements CommandLineRunner {
   private final Scheduler scheduler;
+  private final TaskService taskService;
 
-  public AppStartup(Scheduler scheduler) {
+  public AppStartup(Scheduler scheduler, TaskService taskService) {
     this.scheduler = scheduler;
+    this.taskService = taskService;
   }
 
   @Override
@@ -23,6 +28,23 @@ public class AppStartup implements CommandLineRunner {
     final JobKey jobKey = JobKey.jobKey("orderEventQueueJob", "outbox");
     if (scheduler.checkExists(jobKey)) {
       scheduler.deleteJob(jobKey);
+    }
+
+    for (int i = 0; i < 1; i++) {
+      ForkJoinPool.commonPool().submit(() -> {
+        Optional<Task> taskOptional = taskService.selectForUpdate();
+        if (taskOptional.isPresent()) {
+          Task task = taskOptional.get();
+          log.info("Starting to update task: " + task);
+          try {
+            Thread.sleep(100L);
+            taskService.updateAsSuccess(task.getId());
+            log.info("UpdatEd task as success: " + task.toString());
+          } catch (InterruptedException e) {
+            throw new RuntimeException();
+          }
+        }
+      });
     }
 //
 //    final JobDetail jobDetail = JobBuilder.newJob(OrderEventQueueJob.class)

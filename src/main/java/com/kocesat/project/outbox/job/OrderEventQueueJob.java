@@ -20,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderEventQueueJob extends QuartzJobBean {
   private final OrderService orderService;
+
   @Override
   protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
     try {
