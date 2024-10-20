@@ -2,13 +2,16 @@ package com.kocesat.project.common;
 
 import com.kocesat.project.taskqueue.Task;
 import com.kocesat.project.taskqueue.TaskService;
+import com.kocesat.project.taskqueue.TaskStatus;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.*;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 @Component
@@ -30,22 +33,20 @@ public class AppStartup implements CommandLineRunner {
       scheduler.deleteJob(jobKey);
     }
 
-    for (int i = 0; i < 1; i++) {
-      ForkJoinPool.commonPool().submit(() -> {
-        Optional<Task> taskOptional = taskService.selectForUpdate();
-        if (taskOptional.isPresent()) {
-          Task task = taskOptional.get();
-          log.info("Starting to update task: " + task);
-          try {
-            Thread.sleep(100L);
-            taskService.updateAsSuccess(task.getId());
-            log.info("UpdatEd task as success: " + task.toString());
-          } catch (InterruptedException e) {
-            throw new RuntimeException();
-          }
-        }
-      });
+    LocalDateTime insertStartTime = LocalDateTime.now().minusDays(10);
+    List<Task> taskList = taskService.getTaskListForExecution(TaskStatus.INITIAL.name(), insertStartTime);
+
+    for (Task task : taskList) {
+      taskService.enqueueTaskInNewTx(
+          task.getId(), task.getStatus(), TaskStatus.QUEUED.name(), "99");
     }
+
+    int chunkSize = 40;
+    ForkJoinPool pool = new ForkJoinPool(chunkSize);
+    for (int i = 0; i < chunkSize; i++) {
+      pool.submit(() -> taskService.execute("99"));
+    }
+  }
 //
 //    final JobDetail jobDetail = JobBuilder.newJob(OrderEventQueueJob.class)
 //      .withIdentity(jobKey.getName(), jobKey.getGroup())
@@ -66,5 +67,5 @@ public class AppStartup implements CommandLineRunner {
 //      .build();
 //
 //    scheduler.scheduleJob(jobDetail, cronTrigger);
-  }
 }
+
