@@ -13,4 +13,5 @@
   https://medium.com/@kocesat/how-to-mimic-usage-of-delegates-in-java-as-in-c-9b1eb183947e
 
 - 5 Ways to Check Duplicates in Array with Benchmarks
-Here is the result
+https://medium.com/@kocesat/5-ways-to-check-duplicates-in-array-with-benchmarks-f63e3fe4ec6b 
+![Here is the result](https://github.com/kocesat/demos/blob/master/src/main/resources/static/checkduplicate_jmh.jpeg?raw=true)
