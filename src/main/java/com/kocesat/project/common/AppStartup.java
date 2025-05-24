@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -41,7 +40,7 @@ public class AppStartup implements CommandLineRunner {
           task.getId(), task.getStatus(), TaskStatus.QUEUED.name(), "99");
     }
 
-    int chunkSize = 40;
+    int chunkSize = 1;
     ForkJoinPool pool = new ForkJoinPool(chunkSize);
     for (int i = 0; i < chunkSize; i++) {
       pool.submit(() -> taskService.execute("99"));
